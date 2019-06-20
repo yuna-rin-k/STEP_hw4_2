@@ -18,7 +18,7 @@ public class ReccomendPage {
 		site.setLinks(links);
 
 		System.out.println("finish load");
-		Page targetPage = site.getPageByPageName("東京");
+		Page targetPage = site.getPageByPageName("Google");
 		Page reccomendPage = findReccomend_Patern1(targetPage, pages, links);
 		System.out.println(reccomendPage.pageName);
 	}
