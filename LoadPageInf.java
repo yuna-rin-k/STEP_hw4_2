@@ -12,7 +12,7 @@ public class LoadPageInf{
 	public LoadPageInf(String pagesText, String linkText) {
 
 		this.pagesText = pagesText;
-		this.pages = readPages();
+		this.pages = readPages(pagesText);
 		this.linkText = linkText;
 		linkIsLorded = false;
 	}
@@ -23,98 +23,59 @@ public class LoadPageInf{
 
 	public Map<Page, ArrayList<Page>> getLinks(Site site) {
 		if (!linkIsLorded) {
-			System.out.println("getLinks");
-			readLinks(site);
+			this.links = readLinks(site);
 		}
 		return links;
 	}
 
-	private ArrayList<Page> readPages() {
-		System.out.println("readPages");
-
-		File file = null;
-		BufferedReader pagesData = null;
+	private ArrayList<Page> readPages(String pagesText) {
 
 		ArrayList<Page> pages = new ArrayList<>();
-
+		
 		try {
-			pagesData = new BufferedReader(new FileReader(pagesText));
-			String page = pagesData.readLine();
+			Scanner pagesData = new Scanner(new BufferedInputStream(
+												new FileInputStream(new File(pagesText))));
+			while (pagesData.hasNext()) {
 
-			int count = 0;
+				int id = pagesData.nextInt();
+				String pageName = pagesData.next();
 
-			while (page != null ) {
-				StringTokenizer tokenizer = new StringTokenizer(page);
-				int id = Integer.parseInt(tokenizer.nextToken());
-				String pageName = tokenizer.nextToken();
 				pages.add(new Page(id, pageName));
-				page = pagesData.readLine();
-				count++;
 			}
-
 		} catch (IOException e) {
 			e.printStackTrace();
-
-		} finally {
-			if (pagesData != null) {
-				try {
-					pagesData.close();
-				} catch(IOException e) {}
-			}
 		}
-		return pages;
+		return pages;	 
 	}
 
 	private Map<Page, ArrayList<Page>> readLinks(Site site) {
-		System.out.println("readLinks");
-		linkIsLorded = true;
-
-		File file = null;
-		BufferedReader linkData = null;
 
 		Map<Page, ArrayList<Page>> links = new HashMap<>();
 
 		try {
-			linkData = new BufferedReader(new FileReader(linkText));
-			String link = linkData.readLine();
+			Scanner linksData = new Scanner(new BufferedInputStream(
+												new FileInputStream(new File(linkText))));
 
-			int count = 0;
+			while (linksData.hasNext()) {
 
-			while (link != null) {
-				//System.out.println("count"+count);
-				//System.out.println("link "+link);
+				int srcID = linksData.nextInt();
+				int dstID = linksData.nextInt();
 
-				StringTokenizer tokenizer = new StringTokenizer(link);
-				int srcID = Integer.parseInt(tokenizer.nextToken());
-				int dstID = Integer.parseInt(tokenizer.nextToken());
-				
 				Page src = site.getPageById(srcID);
 				Page dst = site.getPageById(dstID);
 
 				ArrayList<Page> dstArray;
+
 				if (links.containsKey(src)) dstArray = links.get(src);
 				else dstArray = new ArrayList<>();
 
 				dstArray.add(dst);
 				links.put(src, dstArray);
 
-				link = linkData.readLine();
-
-				count++;
 			}
-			System.out.println("finish readLine");
-
 		} catch (IOException e) {
 			e.printStackTrace();
-
-		} finally {
-			if (linkData != null) {
-				try {
-					linkData.close();
-				} catch(IOException e) {}
-			}
 		}
 		return links;
 	}
-
 }

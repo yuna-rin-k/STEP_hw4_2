@@ -9,7 +9,6 @@ public class Site {
 
 	public Site(ArrayList<Page> pages) {
 		this.pages = pages;
-		this.links = links;
 		creatMapWithID();
 		creatMapWithPageName();
 	}
