@@ -5,11 +5,11 @@ public class PageRankInWiki {
 	public static void main(String[] args) {
 
 		LoadPageInf pageInf = new LoadPageInf("pages.txt", "links.txt");
-
 		ArrayList<Page> pages = pageInf.getPages();
 		Site site = new Site(pages);
 		Map<Page, ArrayList<Page>> links = pageInf.getLinks(site);
 		site.setLinks(links);
+
 		Page maxValPage = decideRank(site, pages, links);
 		System.out.println("NO.1 Page is "+ maxValPage.pageName);
 	}
@@ -28,7 +28,7 @@ public class PageRankInWiki {
 		int count = 0;
 		while (count < 5) {
 
-			calculotorVal(pages, links, currentVal, nextVal, randomValue);
+			calculoteVal(pages, links, currentVal, nextVal, randomValue);
 
 			swap(currentVal, nextVal);
 			Arrays.fill(nextVal, 0);
@@ -49,7 +49,7 @@ public class PageRankInWiki {
 		return maxValPage;
 	}
 
-	static void calculotorVal(ArrayList<Page> pages, Map<Page, ArrayList<Page>> links, 
+	static void calculoteVal(ArrayList<Page> pages, Map<Page, ArrayList<Page>> links, 
 												double[] currentVal, double[] nextVal, int randomValue) {
 
 		for (int i = 0; i < pages.size(); i++) {

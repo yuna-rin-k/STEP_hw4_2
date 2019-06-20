@@ -33,8 +33,7 @@ public class LoadPageInf{
 		ArrayList<Page> pages = new ArrayList<>();
 		
 		try {
-			Scanner pagesData = new Scanner(new BufferedInputStream(
-												new FileInputStream(new File(pagesText))));
+			Scanner pagesData = new Scanner(new BufferedInputStream(new FileInputStream(new File(pagesText))));
 			while (pagesData.hasNext()) {
 
 				int id = pagesData.nextInt();
@@ -53,8 +52,7 @@ public class LoadPageInf{
 		Map<Page, ArrayList<Page>> links = new HashMap<>();
 
 		try {
-			Scanner linksData = new Scanner(new BufferedInputStream(
-												new FileInputStream(new File(linkText))));
+			Scanner linksData = new Scanner(new BufferedInputStream(new FileInputStream(new File(linkText))));
 
 			while (linksData.hasNext()) {
 
