@@ -30,10 +30,11 @@ public class LoadPageInf{
 
 	private ArrayList<Page> readPages(String pagesText) {
 
+		System.out.println("start readPages");
 		ArrayList<Page> pages = new ArrayList<>();
 		
 		try {
-			Scanner pagesData = new Scanner(new BufferedInputStream(new FileInputStream(new File(pagesText))));
+			Scanner pagesData = new Scanner(new BufferedInputStream(new FileInputStream(new File(pagesText)),8*1024*1024));
 			while (pagesData.hasNext()) {
 
 				int id = pagesData.nextInt();
@@ -44,15 +45,18 @@ public class LoadPageInf{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		System.out.println("finish readPages");
 		return pages;	 
 	}
 
 	private Map<Page, ArrayList<Page>> readLinks(Site site) {
+		
+		System.out.println("start readLinks");
 
 		Map<Page, ArrayList<Page>> links = new HashMap<>();
 
 		try {
-			Scanner linksData = new Scanner(new BufferedInputStream(new FileInputStream(new File(linkText))));
+			Scanner linksData = new Scanner(new BufferedInputStream(new FileInputStream(new File(linkText)),8*1024*1024));
 
 			while (linksData.hasNext()) {
 
@@ -69,11 +73,11 @@ public class LoadPageInf{
 
 				dstArray.add(dst);
 				links.put(src, dstArray);
-
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		System.out.println("finish readLinks");
 		return links;
 	}
 }
