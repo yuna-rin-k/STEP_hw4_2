@@ -1,3 +1,5 @@
+//未完成
+
 /*targetPageを見ている人におすすめのページ
  *ReccomendPageの定義: 
  *①ページ内のリンクがどれだけtargetPageとかぶっているかの割合が高いもの
@@ -16,20 +18,27 @@ public class ReccomendPage {
 		Site site = new Site(pages);
 		Map<Page, ArrayList<Page>> links = pageInf.getLinks(site);
 		site.setLinks(links);
-
+		System.out.println();
+		System.out.println();
 		System.out.println("finish load");
 		Page targetPage = site.getPageByPageName("Google");
-		Page reccomendPage = findReccomend_Patern1(targetPage, pages, links);
-		System.out.println(reccomendPage.pageName);
+		//ArrayList<Page> reccomendPages = findReccomend_Patern1(targetPage, pages, links);
+		Map<Integer, Page> rank =findReccomend_Patern1(targetPage, pages, links);
+		printRank(rank);
 	}
 
-	static Page findReccomend_Patern1(Page targetPage, ArrayList<Page> pages, Map<Page, ArrayList<Page>> links) {
+	static TreeMap<Integer, Page> findReccomend_Patern1(Page targetPage, ArrayList<Page> pages, Map<Page, ArrayList<Page>> links) {
 
+		TreeMap<Integer, Page> rank = new TreeMap<>(Collections.reverseOrder());
 		ArrayList<Page> linksOfTargetPage = links.get(targetPage);
-
-		Page reccomendPage = null;
 		double maxDeplicateRate = 0;
-		
+
+		for (int i = 0; i < 5; i++) {
+			Page pageFive = pages.get(i);
+			rank.put(0,pageFive);
+		}
+		Page rankFive = pages.get(0);
+
 		for (int i = 0; i < pages.size(); i++) {
 
 			Page page = pages.get(i);
@@ -38,19 +47,25 @@ public class ReccomendPage {
 				continue;
 
 			ArrayList<Page> pageLinks = links.get(page);
-			double numOfdeplication = 0;
+			int numOfdeplication = 0;
 
 			for (int j = 0; j < pageLinks.size(); j++) {
 				Page link = pageLinks.get(j);
 				if (linksOfTargetPage.contains(link)) 
 					numOfdeplication++;
 			}
-			double deplicateRate = numOfdeplication / pageLinks.size();
-			if (maxDeplicateRate < deplicateRate) {
-				maxDeplicateRate = deplicateRate;
-				reccomendPage = page;
+			//System.out.println(numOfdeplication);
+			if (numOfdeplication > rank.firstKey()) {
+				rank.put(numOfdeplication, rankFive);
 			}
 		}
-		return reccomendPage;
+		return rank;
+	}
+
+	static void printRank(Map<Integer, Page> ranking) {
+
+		for (Page rankPage : ranking.values()) {
+			System.out.println(rankPage.pageName);
+		}
 	}
 }
