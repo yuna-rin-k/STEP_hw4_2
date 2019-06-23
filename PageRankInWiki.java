@@ -16,9 +16,10 @@ public class PageRankInWiki {
 		ArrayList<Page> pages = site.getPages();
 		Map<Page, ArrayList<Page>> links = site.getLinks();
 
-		int initVal = 100;
-		int randomValue = 15;
-		int equalVal = initVal - randomValue;
+		double initVal = 100;
+		double randomValueRate = 0.15;
+		double randomValue = randomValueRate * 100;
+		double equalVal = initVal - randomValue;
 
 		double[] currentVal = new double[pages.size()];
 		double[] nextVal = new double[pages.size()];
@@ -28,7 +29,7 @@ public class PageRankInWiki {
 		int count = 0;
 		while (count < 5) {
 
-			calculateVal(pages, links, currentVal, nextVal);
+			calculateVal(pages, links, currentVal, nextVal, randomValueRate);
 
 			swap(currentVal, nextVal);
 			Arrays.fill(nextVal, randomValue);
@@ -50,19 +51,19 @@ public class PageRankInWiki {
 	}
 
 	static void calculateVal(ArrayList<Page> pages, Map<Page, ArrayList<Page>> links, 
-												double[] currentVal, double[] nextVal) {
+												double[] currentVal, double[] nextVal, double randomValueRate) {
 
 		for (int i = 0; i < pages.size(); i++) {
 
 			Page page = pages.get(i);
 
 			if (!links.containsKey(page)){
-				nextVal[page.id] += (currentVal[page.id] * 0.85);
+				nextVal[page.id] += (currentVal[page.id] * (1-randomValueRate));
 				continue;
 			}
 
 			ArrayList<Page> linkPages = links.get(page);
-			double distributeVal = currentVal[page.id] * 0.85 / linkPages.size();
+			double distributeVal = currentVal[page.id] * (1-randomValueRate) / linkPages.size();
 
 			for (int j = 0; j < linkPages.size(); j++) {
 				Page linkPage = linkPages.get(j);
