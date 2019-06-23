@@ -1,34 +1,20 @@
 import java.io.*;
 import java.util.*;
 
-public class LoadPageInf{
+public class LoadPageInfo{
 
-	private ArrayList<Page> pages;
-	private Map<Page, ArrayList<Page>> links;
-	String pagesText;
-	String linkText;
-	private boolean linkIsLorded;
+	public static Site loadSite(String pageFilepath, String linksFilepath) {
 
-	public LoadPageInf(String pagesText, String linkText) {
+		ArrayList<Page> pages = readPages(pageFilepath);
+		Site site = new Site(pages);
 
-		this.pagesText = pagesText;
-		this.pages = readPages(pagesText);
-		this.linkText = linkText;
-		linkIsLorded = false;
+		Map<Page, ArrayList<Page>> links = readLinks(site, linksFilepath);
+		site.setLinks(links);
+
+		return site;
 	}
 
-	public ArrayList<Page> getPages() {
-		return this.pages;
-	}
-
-	public Map<Page, ArrayList<Page>> getLinks(Site site) {
-		if (!linkIsLorded) {
-			this.links = readLinks(site);
-		}
-		return links;
-	}
-
-	private ArrayList<Page> readPages(String pagesText) {
+	private static ArrayList<Page> readPages(String pagesText) {
 
 		System.out.println("start readPages");
 		ArrayList<Page> pages = new ArrayList<>();
@@ -49,14 +35,14 @@ public class LoadPageInf{
 		return pages;	 
 	}
 
-	private Map<Page, ArrayList<Page>> readLinks(Site site) {
+	private static Map<Page, ArrayList<Page>> readLinks(Site site, String linksFilepath) {
 		
 		System.out.println("start readLinks");
 
 		Map<Page, ArrayList<Page>> links = new HashMap<>();
 
 		try {
-			Scanner linksData = new Scanner(new BufferedInputStream(new FileInputStream(new File(linkText)),8*1024*1024));
+			Scanner linksData = new Scanner(new BufferedInputStream(new FileInputStream(new File(linksFilepath)),8*1024*1024));
 
 			while (linksData.hasNext()) {
 

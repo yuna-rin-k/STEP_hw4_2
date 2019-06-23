@@ -2,3 +2,5 @@
 1 banana
 2 peach
 3 remon
+4 chery
+5 orange

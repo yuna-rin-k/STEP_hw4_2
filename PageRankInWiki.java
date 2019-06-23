@@ -4,17 +4,17 @@ import java.io.*;
 public class PageRankInWiki {
 	public static void main(String[] args) {
 
-		LoadPageInf pageInf = new LoadPageInf("pages.txt", "links.txt");
-		ArrayList<Page> pages = pageInf.getPages();
-		Site site = new Site(pages);
-		Map<Page, ArrayList<Page>> links = pageInf.getLinks(site);
-		site.setLinks(links);
+		Site site = LoadPageInfo.loadSite("pages.txt", "links.txt");
+		Page maxValPage = decideRank(site);
 
-		Page maxValPage = decideRank(site, pages, links);
-		System.out.println("NO.1 Page is "+ maxValPage.pageName);
+		System.out.println("NO.1 Page is " + maxValPage.pageName);
+		
 	}
 
-	static Page decideRank(Site site, ArrayList<Page> pages, Map<Page, ArrayList<Page>> links) {
+	static Page decideRank(Site site) {
+
+		ArrayList<Page> pages = site.getPages();
+		Map<Page, ArrayList<Page>> links = site.getLinks();
 
 		int initVal = 100;
 		int randomValue = 15;
@@ -23,15 +23,15 @@ public class PageRankInWiki {
 		double[] currentVal = new double[pages.size()];
 		double[] nextVal = new double[pages.size()];
 		Arrays.fill(currentVal, initVal);
-		Arrays.fill(nextVal, 0);
+		Arrays.fill(nextVal, randomValue);
 
 		int count = 0;
 		while (count < 5) {
 
-			calculoteVal(pages, links, currentVal, nextVal, randomValue);
+			calculateVal(pages, links, currentVal, nextVal);
 
 			swap(currentVal, nextVal);
-			Arrays.fill(nextVal, 0);
+			Arrays.fill(nextVal, randomValue);
 			count++;
 		}
 
@@ -49,28 +49,29 @@ public class PageRankInWiki {
 		return maxValPage;
 	}
 
-	static void calculoteVal(ArrayList<Page> pages, Map<Page, ArrayList<Page>> links, 
-												double[] currentVal, double[] nextVal, int randomValue) {
+	static void calculateVal(ArrayList<Page> pages, Map<Page, ArrayList<Page>> links, 
+												double[] currentVal, double[] nextVal) {
 
 		for (int i = 0; i < pages.size(); i++) {
 
 			Page page = pages.get(i);
-			nextVal[page.id] += randomValue;
 
-			if (!links.containsKey(page))
+			if (!links.containsKey(page)){
+				nextVal[page.id] += (currentVal[page.id] * 0.85);
 				continue;
+			}
 
-			ArrayList<Page> linkPeges = links.get(page);
-			double distributeVal = currentVal[page.id] / linkPeges.size();
+			ArrayList<Page> linkPages = links.get(page);
+			double distributeVal = currentVal[page.id] * 0.85 / linkPages.size();
 
-			for (int j = 0; j < linkPeges.size(); j++) {
-				Page linkPage = linkPeges.get(j);
+			for (int j = 0; j < linkPages.size(); j++) {
+				Page linkPage = linkPages.get(j);
 				nextVal[linkPage.id] += distributeVal;
 			}
 		}
 	}
 	static ArrayList<Page> decideRankWithOption() {
-
+		
 		return null;
 	}
 	static void swap(double[] x, double[] y) {
