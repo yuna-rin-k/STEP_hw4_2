@@ -26,14 +26,25 @@ public class PageRankInWiki {
 		Arrays.fill(currentVal, initVal);
 		Arrays.fill(nextVal, randomValue);
 
-		int count = 0;
-		while (count < 5) {
+		double nextVal_IndexOfzero = 0;
+		boolean isConverge = false;
+		double differenceVal = 0;
+		while (true) {
 
-			calculateVal(pages, links, currentVal, nextVal, randomValueRate);
+			calculateVal(pages, links, currentVal, nextVal, randomValueRate);	
+			
+			if (isConverge && Math.abs((nextVal[0] - nextVal_IndexOfzero)-differenceVal) < 15) {
+				break;
+			} else if (Math.abs(nextVal[0] - nextVal_IndexOfzero) < 15) {
+				isConverge = true;
+				differenceVal = nextVal[0] - nextVal_IndexOfzero;
+			} else {
+				isConverge = false;
+				nextVal_IndexOfzero = nextVal[0];
+			}
 
 			swap(currentVal, nextVal);
 			Arrays.fill(nextVal, randomValue);
-			count++;
 		}
 
 		double maxVal = 0;
@@ -57,12 +68,13 @@ public class PageRankInWiki {
 
 			Page page = pages.get(i);
 
-			if (!links.containsKey(page)){
+			ArrayList<Page> linkPages = links.get(page);
+
+			if (linkPages == null) {
 				nextVal[page.id] += (currentVal[page.id] * (1-randomValueRate));
 				continue;
 			}
 
-			ArrayList<Page> linkPages = links.get(page);
 			double distributeVal = currentVal[page.id] * (1-randomValueRate) / linkPages.size();
 
 			for (int j = 0; j < linkPages.size(); j++) {

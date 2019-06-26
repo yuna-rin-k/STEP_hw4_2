@@ -52,4 +52,8 @@ public class Site {
 	public Page getPageByPageName(String pageName) {
 		return pageNameKey_pageVal.get(pageName);
 	}
+
+	public int getSiteSize() {
+		return pages.size();
+	}
 }

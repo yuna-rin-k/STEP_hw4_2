@@ -52,13 +52,14 @@ public class LoadPageInfo{
 				Page src = site.getPageById(srcID);
 				Page dst = site.getPageById(dstID);
 
-				ArrayList<Page> dstArray;
+				ArrayList<Page> dstArray = links.get(src);
 
-				if (links.containsKey(src)) dstArray = links.get(src);
-				else dstArray = new ArrayList<>();
+				if (dstArray == null) {
+					dstArray = new ArrayList<>();
+					links.put(src, dstArray);
+				}
 
 				dstArray.add(dst);
-				links.put(src, dstArray);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
