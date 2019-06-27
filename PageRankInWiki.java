@@ -29,7 +29,7 @@ public class PageRankInWiki {
 		while (true) {
 
 			calculateVal(pages, links, currentVal, nextVal, randomValueRate);
-				
+
 			if (isConverge(currentVal, nextVal))
 				break;
 
@@ -87,8 +87,8 @@ public class PageRankInWiki {
 		double diff = Math.sqrt(diff_square/currentVal.length);
 		if (diff <= delta) 
 			return true;
-		else
-			return false;
+		
+		return false;
 	}
 	static ArrayList<Page> decideRankWithOption() {
 		
