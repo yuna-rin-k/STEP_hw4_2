@@ -26,22 +26,12 @@ public class PageRankInWiki {
 		Arrays.fill(currentVal, initVal);
 		Arrays.fill(nextVal, randomValue);
 
-		double nextVal_IndexOfzero = 0;
-		boolean isConverge = false;
-		double differenceVal = 0;
 		while (true) {
 
-			calculateVal(pages, links, currentVal, nextVal, randomValueRate);	
-			
-			if (isConverge && Math.abs((nextVal[0] - nextVal_IndexOfzero)-differenceVal) < 15) {
+			calculateVal(pages, links, currentVal, nextVal, randomValueRate);
+				
+			if (isConverge(currentVal, nextVal))
 				break;
-			} else if (Math.abs(nextVal[0] - nextVal_IndexOfzero) < 15) {
-				isConverge = true;
-				differenceVal = nextVal[0] - nextVal_IndexOfzero;
-			} else {
-				isConverge = false;
-				nextVal_IndexOfzero = nextVal[0];
-			}
 
 			swap(currentVal, nextVal);
 			Arrays.fill(nextVal, randomValue);
@@ -57,12 +47,11 @@ public class PageRankInWiki {
 			}
 		}
 		Page maxValPage = site.getPageById(maxValPageID);
-
 		return maxValPage;
 	}
 
 	static void calculateVal(ArrayList<Page> pages, Map<Page, ArrayList<Page>> links, 
-												double[] currentVal, double[] nextVal, double randomValueRate) {
+								double[] currentVal, double[] nextVal, double randomValueRate) {
 
 		for (int i = 0; i < pages.size(); i++) {
 
@@ -82,6 +71,24 @@ public class PageRankInWiki {
 				nextVal[linkPage.id] += distributeVal;
 			}
 		}
+	}
+
+	static boolean isConverge(double[] currentVal, double[] nextVal) {
+
+		double delta = 5.0;
+		double diff_square = 0.0;
+
+		for (int i = 0; i < currentVal.length; i++) {
+			double c_i = currentVal[i];
+			double n_i = nextVal[i];
+			diff_square += (n_i - c_i) * (n_i - c_i);
+		}
+
+		double diff = Math.sqrt(diff_square/currentVal.length);
+		if (diff <= delta) 
+			return true;
+		else
+			return false;
 	}
 	static ArrayList<Page> decideRankWithOption() {
 		
