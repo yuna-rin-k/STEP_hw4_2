@@ -85,10 +85,8 @@ public class PageRankInWiki {
 		}
 
 		double diff = Math.sqrt(diff_square/currentVal.length);
-		if (diff <= delta) 
-			return true;
-		
-		return false;
+
+		return diff <= delta;
 	}
 	static ArrayList<Page> decideRankWithOption() {
 		
